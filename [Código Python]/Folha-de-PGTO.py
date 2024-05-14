@@ -69,9 +69,15 @@ def relatorio_financeiro():
         salario_bruto = funcionarios[Matricula][2]
         num_faltas = funcionarios[Matricula][3]
         vendas_mensal = funcionarios[Matricula][4]
-        salario_liquido = 0  #FAZER O CÁLCULO
+        
         desconto_falta = (salario_bruto/30)*num_faltas
-        percentual_imposto = 0
+
+        
+
+        if funcao == 101:
+            salario_liquido = salario_bruto - desconto_falta + (vendas_mensal*0.09)
+        elif funcao == 102:
+            salario_liquido = salario_bruto - desconto_falta
 
         tabela = PrettyTable(["Matrícula", "Nome", "Função", "Salário Bruto", "Salario Líquido", "Número de faltas", "Percentual imposto", "Desconto"])
 
