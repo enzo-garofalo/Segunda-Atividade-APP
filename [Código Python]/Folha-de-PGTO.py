@@ -9,122 +9,162 @@
 
 # 4. Determinar um relatório com o salário bruto e líquido de todos os funcionários
         # Esta opção deverá imprimir uma tabela contendo a Matrícula, Nome, Código da Função, 
-        #Salário Bruto e Salário Líquido de cada funcionário
+        # Salário Bruto e Salário Líquido de cada funcionário
 
 # 5. Imprimir as informações do funcionário com maior salário líquido
         # Esta opção deverá imprimir Matrícula, Nome, Código da Função, salário bruto, percentual de imposto e salário líquido
 
 # 6. Imprimir as informações do funcionário com o maior número de faltas no mês
         # Esta opção deverá imprimir a Matrícula, Nome, Código da Função, Número de Faltas e desconto no salário do funcionário
-#_______________________________________________________________________________
+#_______________________________________________________________________________________________________________________________
+
 import os
 from prettytable import PrettyTable
 
-funcionarios = {}
-
+funcionarios = {1: ['Enzo', 101, 1500.0, 4, 20000.0], 2: ['Rogério', 102, 6000.0, 0, 0] }
+# COMPLETO
 def cadastrar():
     os.system('cls')
     print('='*12,"Cadastro de Funcionário",'='*13)
+    # Validação das entradas pelos laços While True
     while True:
         Matricula = int(input("Digite a matricula: "))
         if Matricula in funcionarios:
-            print("Matrícula já existente. Digite uma matrícula válida.")
+            print("\n"+"="*13,"Matrícula já existente","="*13)
             continue
-        Nome = input("Digite o nome: ")
-        print('-'*20,'Funções','-'*21)
-        print("-------- 101 - Vendedor | 102 - Administrativo ---")
-        print('-'*50)
-        Funcao = int(input('Digite a função: '))
-        if Funcao == 101:
-            salario_bruto = 1500.00
-            valor_vendas = float(input("Digite o valor total das vendas: R$"))
-        elif Funcao == 102:
-            while True:
-                print('-'*20,'Limites','-'*21)
-                print('----- Inferior: 2150.00 | Superior: 6950.00 ------')
-                print('-'*50)
-                salario_bruto = float(input("Digite o salário bruto: "))
-                valor_vendas = 0
-                if salario_bruto < 2150 or salario_bruto > 6950:
-                    print("Digite uma opção válida. (Limite inferior: 2150.00 | Limite superior: 6950.00)")
-                    continue
-                else:
-                    break
         else:
-            os.system('cls')
-            print('='*6,"Digite uma opção válida para a função!",'='*6)
-            print('='*15,"Reiniciando Cadastro",'='*15)
-            continue
+            break
 
-        num_faltas = int(input(f"Digite o numero de faltas do funcionário {Nome}: "))
-        break
+    Nome = input("Digite o nome: ").title()
+    print('-'*20,'Funções','-'*21)
+    print("-------- 101 - Vendedor | 102 - Administrativo ---")
+    print('-'*50)
+
+    while True:
+        Funcao = int(input('Digite a função: '))
+        if Funcao in [101, 102]:
+            break
+        else:
+            print("\n"+"="*12,"Digite uma opção válida","="*13)
+            continue
+        
+    if Funcao == 101:
+        salario_bruto = 1500.00
+        valor_vendas = float(input("Digite o valor total das vendas: R$"))
+    elif Funcao == 102:
+        print('-'*20,'Limites','-'*21)
+        print('----- Inferior: 2150.00 | Superior: 6950.00 ------')
+        print('-'*50)
+        while True:
+            salario_bruto = float(input("Digite o salário bruto: "))
+            valor_vendas = 0
+            if salario_bruto < 2150 or salario_bruto > 6950:
+                print("\n"+"="*12,"Digite uma opção válida","="*13)
+                continue
+            else:
+                break
+
+
+    num_faltas = int(input(f"Digite o numero de faltas do funcionário {Nome}: "))
+
     
     print('='*50)
     funcionarios[Matricula] = [Nome, Funcao, salario_bruto, num_faltas, valor_vendas]
-    # print(funcionarios)
+    print(funcionarios)
     n_cadastro = int(input("\nDeseja cadastrar outro funcionário?\n[1-Sim | 2-Não]: "))
     if n_cadastro == 1:
         cadastrar()
     else:
         return
-
+# COMPLETO - (AJUSTAR ESTILO)
 def remover():
     
     os.system('cls')        
-    while True:
-        print('='*35)
-        opcao = int(input("Deseja listar os funcionários? 1-SIM | 2-NÃO R: "))
-        if opcao == 1:
-            tabela = PrettyTable(["Matricula", "Funcionário"])
-            for Matricula, nome in funcionarios.items():
-                nome = funcionarios[Matricula][0]
-                tabela.add_row([Matricula, nome])
-            print(tabela)
+    print('='*50)
+    opcao = int(input("Deseja listar os funcionários? 1-SIM | 2-NÃO R: "))
+    if opcao == 1:
+        tabela = PrettyTable(["Matricula", "Funcionário"])
+        for Matricula, nome in funcionarios.items():
+            nome = funcionarios[Matricula][0]
+            tabela.add_row([Matricula, nome])
+        print(tabela)
 
-        remover = int(input("Qual a matricula do funcionário que deseja remover? R: "))
-        valores = funcionarios.get(remover, "Matrícula não encontrada")
-        print(f"Deseja realmente excluir este funcionário ", end= " ")
-        print(valores)
-        opcao2 = int(input("1 (sim) | 2 (não). R: "))
-        if opcao2 == 1:
-            valor_remover = funcionarios.pop(remover, None)
-            print(f"Funcionário {valor_remover} removido!")
+    matricula_remover = int(input("Qual a matricula do funcionário que deseja remover? R: "))
+    valores = funcionarios.get(matricula_remover, "Matrícula não encontrada")
+    print(f"Deseja realmente excluir este funcionário ", end= " ")
+    print(valores)
+    opcao2 = int(input("1 (sim) | 2 (não). R: "))
+    if opcao2 == 1:
+        valor_remover = funcionarios.pop(matricula_remover, None)
+        print(f"Funcionário {valor_remover} removido!")
         
-        opcao3 = int(input(f"Desesja nova remoção? 1 (sim) | 2 (não). R: "))
-        if opcao3 == 1:
+    opcao3 = int(input(f"Desesja nova remoção? 1 (sim) | 2 (não). R: "))
+    if opcao3 == 1:
+        remover()
+    else:
+        return    
+
+def escolha_consultar():
+    while True:
+        print('='*14,'Consultar Relatórios','='*14)
+        print('-'*14,'|1- Por Funcionário|','-'*14)
+        print('-'*14,'|2- Exibir Todos   |','-'*14)
+        print('-'*14,'|3- Maior Salário  |','-'*14)
+        print('-'*14,'|4- Maior Faltas   |','-'*14)
+        print('='*50)
+        busca = int(input("O que deseja fazer? "))
+        if busca not in [1,2,3,4]:
+            os.system('cls')
+            print("\n"+"="*12,"Digite uma opção válida","="*13)
             continue
         else:
-            return    
+            break
+    return busca
 
 def consultar():
+    os.system('cls')
+    busca = escolha_consultar()
+    matriculas_para_busca = []
+    if busca == 2:
+        for matricula in funcionarios.keys():
+            matriculas_para_busca.append(matricula)
+        construtorTabelas(matriculas_para_busca)
+    else:
+        print('\nEstamos Trabalhando......')
+        
 
+def construtorTabelas(matriculas_para_busca):
 
+    tabela = PrettyTable(["Matricula","Nome", "Função","Vendas Mensal","Salário Líquido", "Salário Bruto"])
+    tabela.align = 'l'
 
+    for matricula in matriculas_para_busca:
+        nome = funcionarios[matricula][0]
+        funcao = funcionarios[matricula][1]
+        salario_bruto = funcionarios[matricula][2]
+        num_faltas = funcionarios[matricula][3]
+        desconto_falta = (salario_bruto/30)*num_faltas
 
-    return
+        if funcao == 101:
+            vendas_mensal = funcionarios[matricula][4]
+            salario_liquido = salario_bruto - desconto_falta + (vendas_mensal*0.09)
+        else:
+            vendas_mensal = 0
+            salario_liquido = salario_bruto - desconto_falta
 
+        tabela.add_row([matricula, nome, funcao, f'R$ {vendas_mensal:.2f}', f'R$ {salario_liquido:.2f}', f'R$ {salario_bruto:.2f}'])
+    print(tabela)
+    return 
 def relatorio_financeiro():
-
     while True:
 
         Matricula = int(input("Qual maltrícula do funionário que deseja fazer o cálculo: "))
 
-        nome = funcionarios[Matricula][0]
-        funcao = funcionarios[Matricula][1]
-        salario_bruto = funcionarios[Matricula][2]
-        num_faltas = funcionarios[Matricula][3]
-        vendas_mensal = funcionarios[Matricula][4]
         
-        desconto_falta = (salario_bruto/30)*num_faltas
 
-        if funcao == 101:
-            salario_liquido = salario_bruto - desconto_falta + (vendas_mensal*0.09)
-        elif funcao == 102:
-            salario_liquido = salario_bruto - desconto_falta
 
         tabela = PrettyTable(["Matrícula", "Nome", "Função", "Salário Bruto", "Salario Líquido", "Número de faltas", "Percentual imposto", "Desconto"])
 
-        tabela.add_row([Matricula, nome, funcao, f"R$ {salario_bruto:.2f}", f"R$ {salario_liquido:.2f}", num_faltas, f"{percentual_imposto}%", f"{desconto_falta:.2f}"])
         
         print(tabela)
 
@@ -135,18 +175,16 @@ def relatorio_financeiro():
         else:
             return
 
-    
-
 def menu():
     while True:
         os.system('cls')
-        print('='*12, 'MENU', '='*12)
-        print('-'*6, '| 1- Cadastrar |', '-'*6)
-        print('-'*6, '| 2- Consultar |', '-'*6)
-        print('-'*6, '| 3- Remover   |', '-'*6)
-        print('-'*6, '| 4- Relatório |', '-'*6)
-        print('-'*6, '| 5- Sair      |', '-'*6)
-        print('='*30)
+        print('='*22, 'Menu', '='*22)
+        print('-'*16, '| 1- Cadastrar |', '-'*16)
+        print('-'*16, '| 2- Consultar |', '-'*16)
+        print('-'*16, '| 3- Remover   |', '-'*16)
+        print('-'*16, '| 4- Relatório |', '-'*16)
+        print('-'*16, '| 5- Sair      |', '-'*16)
+        print('='*50)
         escolha = int(input("O que deseja fazer? "))
         if escolha == 1:
             cadastrar()
@@ -157,10 +195,11 @@ def menu():
         elif escolha == 4:
             relatorio_financeiro()
         elif escolha == 5:
-            print('='*12,'ATÉ LOGO!','='*12)
+            print('='*12,'Até Logo','='*12)
             exit()
         else:
             print("Digite uma opção válida!")
             continue
+        break
 
 menu()
