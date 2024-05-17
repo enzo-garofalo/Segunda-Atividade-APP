@@ -1,5 +1,22 @@
 #Atividade Avaliativa 2
+#Objetivos:
+#1) Inserir funcionários
 
+#2) Remover funcionários
+
+#3) Determinar a folha de pagamento de um determinado funcionário
+        # Esta opção deverá imprimir todas as informações sobre o funcionário incluindo o valor do percentual do imposto
+
+# 4. Determinar um relatório com o salário bruto e líquido de todos os funcionários
+        # Esta opção deverá imprimir uma tabela contendo a Matrícula, Nome, Código da Função, 
+        #Salário Bruto e Salário Líquido de cada funcionário
+
+# 5. Imprimir as informações do funcionário com maior salário líquido
+        # Esta opção deverá imprimir Matrícula, Nome, Código da Função, salário bruto, percentual de imposto e salário líquido
+
+# 6. Imprimir as informações do funcionário com o maior número de faltas no mês
+        # Esta opção deverá imprimir a Matrícula, Nome, Código da Função, Número de Faltas e desconto no salário do funcionário
+#_______________________________________________________________________________
 import os
 from prettytable import PrettyTable
 
@@ -52,12 +69,32 @@ def cadastrar():
         return
 
 def remover():
-    #uma vez removido, as matriculas não atualizam
+    
+    os.system('cls')        
+    while True:
+        print('='*35)
+        opcao = int(input("Deseja listar os funcionários? 1-SIM | 2-NÃO R: "))
+        if opcao == 1:
+            tabela = PrettyTable(["Matricula", "Funcionário"])
+            for Matricula, nome in funcionarios.items():
+                nome = funcionarios[Matricula][0]
+                tabela.add_row([Matricula, nome])
+            print(tabela)
 
-
-
-
-    return()
+        remover = int(input("Qual a matricula do funcionário que deseja remover? R: "))
+        valores = funcionarios.get(remover, "Matrícula não encontrada")
+        print(f"Deseja realmente excluir este funcionário ", end= " ")
+        print(valores)
+        opcao2 = int(input("1 (sim) | 2 (não). R: "))
+        if opcao2 == 1:
+            valor_remover = funcionarios.pop(remover, None)
+            print(f"Funcionário {valor_remover} removido!")
+        
+        opcao3 = int(input(f"Desesja nova remoção? 1 (sim) | 2 (não). R: "))
+        if opcao3 == 1:
+            continue
+        else:
+            return    
 
 def consultar():
 
@@ -79,8 +116,6 @@ def relatorio_financeiro():
         vendas_mensal = funcionarios[Matricula][4]
         
         desconto_falta = (salario_bruto/30)*num_faltas
-
-        
 
         if funcao == 101:
             salario_liquido = salario_bruto - desconto_falta + (vendas_mensal*0.09)
