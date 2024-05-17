@@ -7,22 +7,26 @@ funcionarios = {}
 
 def cadastrar():
     os.system('cls')
+    print('='*12,"Cadastro de Funcionário",'='*13)
     while True:
-        print('='*35)
-        Matricula = int(input("Qual a matricula do funcionário? "))
+        Matricula = int(input("Digite a matricula: "))
         if Matricula in funcionarios:
             print("Matrícula já existente. Digite uma matrícula válida.")
             continue
-        Nome = input("Digite o nome do funcionário: ")
-        Funcao = int(input("101 - vendedor | 102 Administrativo\nQual a função? "))
-
+        Nome = input("Digite o nome: ")
+        print('-'*20,'Funções','-'*21)
+        print("-------- 101 - Vendedor | 102 - Administrativo ---")
+        print('-'*50)
+        Funcao = int(input('Digite a função: '))
         if Funcao == 101:
             salario_bruto = 1500.00
             valor_vendas = float(input("Digite o valor total das vendas: R$"))
-
         elif Funcao == 102:
             while True:
-                salario_bruto = float(input("Digite o salário bruto: (Limite inferior: 2150.00 | Limite superior: 6950.00). Salário: "))
+                print('-'*20,'Limites','-'*21)
+                print('----- Inferior: 2150.00 | Superior: 6950.00 ------')
+                print('-'*50)
+                salario_bruto = float(input("Digite o salário bruto: "))
                 valor_vendas = 0
                 if salario_bruto < 2150 or salario_bruto > 6950:
                     print("Digite uma opção válida. (Limite inferior: 2150.00 | Limite superior: 6950.00)")
@@ -30,18 +34,22 @@ def cadastrar():
                 else:
                     break
         else:
-            print("Digite uma opção válida. 101 - Vendedor | 102 - Administrativo")
+            os.system('cls')
+            print('='*6,"Digite uma opção válida para a função!",'='*6)
+            print('='*15,"Reiniciando Cadastro",'='*15)
             continue
-        num_faltas = int(input(f"Digite o numero de faltas do funcionário {Nome}: "))
-        
-        funcionarios[Matricula] = [Nome, Funcao, salario_bruto, num_faltas, valor_vendas ]
 
-        print(funcionarios)
-        n_cadastro = int(input("Deseja cadastrar outro funcionário? 1 (sim) | 2 (não). R: "))
-        if n_cadastro == 1:
-            continue
-        else:
-            return
+        num_faltas = int(input(f"Digite o numero de faltas do funcionário {Nome}: "))
+        break
+    
+    print('='*50)
+    funcionarios[Matricula] = [Nome, Funcao, salario_bruto, num_faltas, valor_vendas]
+    # print(funcionarios)
+    n_cadastro = int(input("\nDeseja cadastrar outro funcionário?\n[1-Sim | 2-Não]: "))
+    if n_cadastro == 1:
+        cadastrar()
+    else:
+        return
 
 def remover():
     #uma vez removido, as matriculas não atualizam
