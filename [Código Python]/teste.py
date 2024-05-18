@@ -80,16 +80,14 @@ def cadastrar():
 def remover():
     
     os.system('cls')        
-    print('='*50)
-    opcao = int(input("Deseja listar os funcionários? 1-SIM | 2-NÃO R: "))
+    print('='*14, 'Remover Funcionário', '='*15)
+    opcao = int(input("Deseja listar os funcionários?\n[1-Sim | 2-Não]: "))
     if opcao == 1:
-        tabela = PrettyTable(["Matricula", "Funcionário"])
-        for Matricula, nome in funcionarios.items():
-            nome = funcionarios[Matricula][0]
-            tabela.add_row([Matricula, nome])
-        print(tabela)
+        print('='*82)
+        construtorTabelas()
+        print('='*82)
 
-    matricula_remover = int(input("Qual a matricula do funcionário que deseja remover? R: "))
+    matricula_remover = int(input("Digite a matricula do funcionário que deseja remover: "))
     valores = funcionarios.get(matricula_remover, "Matrícula não encontrada")
     print(f"Deseja realmente excluir este funcionário ", end= " ")
     print(valores)

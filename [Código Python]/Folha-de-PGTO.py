@@ -21,7 +21,8 @@
 import os
 from prettytable import PrettyTable
 
-funcionarios = {1: ['Enzo', 101, 1500.0, 4, 20000.0], 2: ['Rogério', 102, 6000.0, 0, 0] }
+funcionarios = {1: ['Enzo', 101, 1500.0, 4, 20000.0], 2: ['Rogério', 102, 6000.0, 0, 0],  3: ['Bruno', 102, 6950.0, 0, 0] }
+
 # COMPLETO
 def cadastrar():
     os.system('cls')
@@ -76,34 +77,40 @@ def cadastrar():
         cadastrar()
     else:
         return
-# COMPLETO - (AJUSTAR ESTILO)
+# COMPLETO
 def remover():
     
     os.system('cls')        
-    print('='*50)
-    opcao = int(input("Deseja listar os funcionários? 1-SIM | 2-NÃO R: "))
+    print('='*14, 'Remover Funcionário', '='*15)
+    opcao = int(input("Deseja listar os funcionários?\n[1-Sim | 2-Não]: "))
+    
     if opcao == 1:
-        tabela = PrettyTable(["Matricula", "Funcionário"])
-        for Matricula, nome in funcionarios.items():
-            nome = funcionarios[Matricula][0]
-            tabela.add_row([Matricula, nome])
-        print(tabela)
+        print('='*82)
+        construtorTabelas()
+        print('='*82)
 
-    matricula_remover = int(input("Qual a matricula do funcionário que deseja remover? R: "))
-    valores = funcionarios.get(matricula_remover, "Matrícula não encontrada")
-    print(f"Deseja realmente excluir este funcionário ", end= " ")
-    print(valores)
-    opcao2 = int(input("1 (sim) | 2 (não). R: "))
+    while True:
+        matricula_remover = int(input("Digite a matrícula do funcionário que deseja remover: "))
+        valores = funcionarios.get(matricula_remover, False)
+        if not valores:
+            print('\n'+'='*30,'Matrícula Não Existe', '='*30)
+            continue
+        else:
+            break
+
+    print(f"\nDeseja realmente excluir funcionário(a) {valores[0]}")
+    opcao2 = int(input("[1-Sim | 2-Não]: "))
     if opcao2 == 1:
         valor_remover = funcionarios.pop(matricula_remover, None)
-        print(f"Funcionário {valor_remover} removido!")
-        
-    opcao3 = int(input(f"Desesja nova remoção? 1 (sim) | 2 (não). R: "))
-    if opcao3 == 1:
+        print('='*25,f"Funcionário {valor_remover[0]} removido!",'='*26)
+
+    print('\n'+'='*82)    
+    escolha = int(input(f"Deseja remover algum funcionário?\n[1-Sim | 2-Não]: "))
+    if escolha == 1:
         remover()
     else:
         return    
-
+# COMPLETO
 def escolha_consultar():
     while True:
         print('='*14,'Consultar Relatórios','='*14)
@@ -126,19 +133,22 @@ def consultar():
     busca = escolha_consultar()
     matriculas_para_busca = []
     if busca == 2:
-        for matricula in funcionarios.keys():
-            matriculas_para_busca.append(matricula)
-        construtorTabelas(matriculas_para_busca)
+        construtorTabelas()
     else:
         print('\nEstamos Trabalhando......')
-        
 
-def construtorTabelas(matriculas_para_busca):
+    escolha = int(input("\nDeseja fazer outra busca?\n[1-Sim | 2-Não]: "))
+    if escolha == 1:
+        consultar()
+    else:
+        return
+
+def construtorTabelas():
 
     tabela = PrettyTable(["Matricula","Nome", "Função","Vendas Mensal","Salário Líquido", "Salário Bruto"])
     tabela.align = 'l'
 
-    for matricula in matriculas_para_busca:
+    for matricula in funcionarios.keys():
         nome = funcionarios[matricula][0]
         funcao = funcionarios[matricula][1]
         salario_bruto = funcionarios[matricula][2]
@@ -155,6 +165,7 @@ def construtorTabelas(matriculas_para_busca):
         tabela.add_row([matricula, nome, funcao, f'R$ {vendas_mensal:.2f}', f'R$ {salario_liquido:.2f}', f'R$ {salario_bruto:.2f}'])
     print(tabela)
     return 
+
 def relatorio_financeiro():
     while True:
 
@@ -195,11 +206,10 @@ def menu():
         elif escolha == 4:
             relatorio_financeiro()
         elif escolha == 5:
-            print('='*12,'Até Logo','='*12)
+            print('='*20,'Até Logo','='*20)
             exit()
         else:
             print("Digite uma opção válida!")
             continue
-        break
 
 menu()
