@@ -1,15 +1,8 @@
 #Atividade Avaliativa 2
 #Objetivos:
-#1) Inserir funcionários
-
-#2) Remover funcionários
 
 #3) Determinar a folha de pagamento de um determinado funcionário
         # Esta opção deverá imprimir todas as informações sobre o funcionário incluindo o valor do percentual do imposto
-
-# 4. Determinar um relatório com o salário bruto e líquido de todos os funcionários
-        # Esta opção deverá imprimir uma tabela contendo a Matrícula, Nome, Código da Função, 
-        # Salário Bruto e Salário Líquido de cada funcionário
 
 # 5. Imprimir as informações do funcionário com maior salário líquido
         # Esta opção deverá imprimir Matrícula, Nome, Código da Função, salário bruto, percentual de imposto e salário líquido
@@ -22,7 +15,7 @@ import os
 from prettytable import PrettyTable
 
 funcionarios = {1: ['Enzo', 101, 1500.0, 4, 20000.0], 2: ['Rogério', 102, 6000.0, 0, 0],  3: ['Bruno', 102, 6950.0, 0, 0] }
-
+    
 # COMPLETO
 def cadastrar():
     os.system('cls')
@@ -156,35 +149,39 @@ def construtorTabelas():
         desconto_falta = (salario_bruto/30)*num_faltas
 
         if funcao == 101:
-            vendas_mensal = funcionarios[matricula][4]
-            salario_liquido = salario_bruto - desconto_falta + (vendas_mensal*0.09)
+            valor_vendas = funcionarios[matricula][4]
         else:
-            vendas_mensal = 0
-            salario_liquido = salario_bruto - desconto_falta
+            valor_vendas = 0
+        
+        salario_liquido, percentual = det_salario_liquido(salario_bruto, num_faltas, valor_vendas)
+        
+            
 
-        tabela.add_row([matricula, nome, funcao, f'R$ {vendas_mensal:.2f}', f'R$ {salario_liquido:.2f}', f'R$ {salario_bruto:.2f}'])
+        tabela.add_row([matricula, nome, funcao, f'R$ {valor_vendas:.2f}', f'R$ {salario_liquido:.2f}', f'R$ {salario_bruto:.2f}'])
     print(tabela)
     return 
 
-def relatorio_financeiro():
-    while True:
+def det_salario_liquido(salario_bruto, num_faltas, valor_vendas):
 
-        Matricula = int(input("Qual maltrícula do funionário que deseja fazer o cálculo: "))
+    salario_bruto_tratado  = salario_bruto - (salario_bruto / 30 * num_faltas) + (valor_vendas * 0.09)
 
-        
+    if salario_bruto_tratado  <= 2259.20:
+        percentual_imposto = 0 
+    
+    elif salario_bruto_tratado  <= 2828.65:
+        percentual_imposto = 7.5
+    
+    elif salario_bruto_tratado  <= 3751.05:
+        percentual_imposto = 15
 
+    elif salario_bruto_tratado  <= 4664.68:
+        percentual_imposto = 22.5
+    
+    else:
+        percentual_imposto = 27.5
 
-        tabela = PrettyTable(["Matrícula", "Nome", "Função", "Salário Bruto", "Salario Líquido", "Número de faltas", "Percentual imposto", "Desconto"])
-
-        
-        print(tabela)
-
-        nova_consulta = int(input("Deseja fazer nova consulta? 1 (sim) | 2 (não). R: "))
-        
-        if nova_consulta == 1:
-            continue
-        else:
-            return
+    salario_liquido = salario_bruto_tratado - (salario_bruto_tratado * percentual_imposto/100) 
+    return salario_liquido, percentual_imposto
 
 def menu():
     while True:
@@ -193,8 +190,7 @@ def menu():
         print('-'*16, '| 1- Cadastrar |', '-'*16)
         print('-'*16, '| 2- Consultar |', '-'*16)
         print('-'*16, '| 3- Remover   |', '-'*16)
-        print('-'*16, '| 4- Relatório |', '-'*16)
-        print('-'*16, '| 5- Sair      |', '-'*16)
+        print('-'*16, '| 4- Sair      |', '-'*16)
         print('='*50)
         escolha = int(input("O que deseja fazer? "))
         if escolha == 1:
@@ -204,8 +200,6 @@ def menu():
         elif escolha == 3:
             remover()
         elif escolha == 4:
-            relatorio_financeiro()
-        elif escolha == 5:
             print('='*20,'Até Logo','='*20)
             exit()
         else:
