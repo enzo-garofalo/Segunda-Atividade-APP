@@ -16,7 +16,7 @@ from prettytable import PrettyTable
 
 funcionarios = {1: ['Enzo', 101, 1500.0, 4, 20000.0], 2: ['Rogério', 102, 6000.0, 0, 0],  3: ['Bruno', 102, 6950.0, 0, 0] }
     
-# COMPLETO
+
 def cadastrar():
     os.system('cls')
     print('='*12,"Cadastro de Funcionário",'='*13)
@@ -70,7 +70,7 @@ def cadastrar():
         cadastrar()
     else:
         return
-# COMPLETO
+
 def remover():
     
     os.system('cls')        
@@ -103,14 +103,14 @@ def remover():
         remover()
     else:
         return    
-# COMPLETO
+
 def escolha_consultar():
     while True:
         print('='*14,'Consultar Relatórios','='*14)
-        print('-'*14,'|1- Por Funcionário|','-'*14)
-        print('-'*14,'|2- Exibir Todos   |','-'*14)
-        print('-'*14,'|3- Maior Salário  |','-'*14)
-        print('-'*14,'|4- Maior Faltas   |','-'*14)
+        print('-'*13,'| 1- Por Funcionário |','-'*13)
+        print('-'*13,'| 2- Exibir Todos    |','-'*13)
+        print('-'*13,'| 3- Maior Salário   |','-'*13)
+        print('-'*13,'| 4- Maior Faltas    |','-'*13)
         print('='*50)
         busca = int(input("O que deseja fazer? "))
         if busca not in [1,2,3,4]:
@@ -125,23 +125,35 @@ def consultar():
     os.system('cls')
     busca = escolha_consultar()
     matriculas_para_busca = []
-    if busca == 2:
-        construtorTabelas()
-    else:
+
+    print('\n'+'='*82)
+    if busca == 1:
+        # Não está exibindo algumas coisas :(
+        funcionario_buscado = int(input('Digite a Matrícula do funcionário: '))
+        busca = funcionarios.get(funcionario_buscado)
+        if busca == None:
+            print('Funcionário não existe!')
+        else:
+            matriculas_para_busca.append(funcionario_buscado)
+            construtorTabelas(matriculas_para_busca)
+    elif busca == 2:
+        construtorTabelas(funcionarios.keys())
+    elif busca == 3:
         print('\nEstamos Trabalhando......')
 
+    print('='*82)
     escolha = int(input("\nDeseja fazer outra busca?\n[1-Sim | 2-Não]: "))
     if escolha == 1:
         consultar()
     else:
         return
 
-def construtorTabelas():
+def construtorTabelas(matriculas_para_busca):
 
     tabela = PrettyTable(["Matricula","Nome", "Função","Vendas Mensal","Salário Líquido", "Salário Bruto"])
     tabela.align = 'l'
 
-    for matricula in funcionarios.keys():
+    for matricula in matriculas_para_busca:
         nome = funcionarios[matricula][0]
         funcao = funcionarios[matricula][1]
         salario_bruto = funcionarios[matricula][2]
