@@ -45,13 +45,14 @@ def cadastrar():
     if Funcao == 101:
         salario_bruto = 1500.00
         valor_vendas = float(input("Digite o valor total das vendas: R$"))
+
     elif Funcao == 102:
+        valor_vendas = 0
         print('-'*20,'Limites','-'*21)
         print('----- Inferior: 2150.00 | Superior: 6950.00 ------')
         print('-'*50)
         while True:
             salario_bruto = float(input("Digite o salário bruto: "))
-            valor_vendas = 0
             if salario_bruto < 2150 or salario_bruto > 6950:
                 print("\n"+"="*12,"Digite uma opção válida","="*13)
                 continue
@@ -64,7 +65,9 @@ def cadastrar():
     
     print('='*50)
     funcionarios[Matricula] = [Nome, Funcao, salario_bruto, num_faltas, valor_vendas]
-    print(funcionarios)
+    
+    construtorTabelas(funcionarios.keys())
+    
     n_cadastro = int(input("\nDeseja cadastrar outro funcionário?\n[1-Sim | 2-Não]: "))
     if n_cadastro == 1:
         cadastrar()
@@ -79,7 +82,7 @@ def remover():
     
     if opcao == 1:
         print('='*82)
-        construtorTabelas()
+        construtorTabelas(funcionarios.keys())
         print('='*82)
 
     while True:
@@ -121,6 +124,31 @@ def escolha_consultar():
             break
     return busca
 
+def maior_salario():
+
+    maior_sal_liquido = 0
+    maior_sal_matricula = []
+
+    for matricula in funcionarios:
+
+        funcao = funcionarios[matricula][1]
+        salario_bruto = funcionarios[matricula][2]
+        num_faltas = funcionarios[matricula][3]
+        desconto_falta = (salario_bruto/30)*num_faltas
+        if funcao == 101:
+            valor_vendas = funcionarios[matricula][4]
+        else:
+            valor_vendas = 0
+
+        auxiliar = det_salario_liquido(salario_bruto,num_faltas,valor_vendas)
+
+        if auxiliar[0] > maior_sal_liquido:
+            maior_sal_liquido = auxiliar[0]
+            matricula_maior = matricula
+    maior_sal_matricula.append(matricula_maior)
+    
+    print(construtorTabelas(maior_sal_matricula))
+
 def consultar():
     os.system('cls')
     busca = escolha_consultar()
@@ -128,7 +156,8 @@ def consultar():
 
     print('\n'+'='*82)
     if busca == 1:
-        # Não está exibindo algumas coisas :(
+        # Não está exibindo algumas coisas :( / já arrumei - Rogério
+
         funcionario_buscado = int(input('Digite a Matrícula do funcionário: '))
         busca = funcionarios.get(funcionario_buscado)
         if busca == None:
@@ -139,8 +168,10 @@ def consultar():
     elif busca == 2:
         construtorTabelas(funcionarios.keys())
     elif busca == 3:
-        print('\nEstamos Trabalhando......')
-
+        
+        print("="*10, "MAIOR SALÁRIO", "="*10)
+        maior_salario()
+        
     print('='*82)
     escolha = int(input("\nDeseja fazer outra busca?\n[1-Sim | 2-Não]: "))
     if escolha == 1:
@@ -150,7 +181,7 @@ def consultar():
 
 def construtorTabelas(matriculas_para_busca):
 
-    tabela = PrettyTable(["Matricula","Nome", "Função","Vendas Mensal","Salário Líquido", "Salário Bruto"])
+    tabela = PrettyTable(["Matricula","Nome", "Função","Vendas Mensal","Salário Líquido", "Salário Bruto", "Num. faltas"])
     tabela.align = 'l'
 
     for matricula in matriculas_para_busca:
@@ -165,13 +196,12 @@ def construtorTabelas(matriculas_para_busca):
         else:
             valor_vendas = 0
         
+        #duvida nessa função
         salario_liquido, percentual = det_salario_liquido(salario_bruto, num_faltas, valor_vendas)
         
-            
-
-        tabela.add_row([matricula, nome, funcao, f'R$ {valor_vendas:.2f}', f'R$ {salario_liquido:.2f}', f'R$ {salario_bruto:.2f}'])
+        tabela.add_row([matricula, nome, funcao, f'R$ {valor_vendas:.2f}', f'R$ {salario_liquido:.2f}', f'R$ {salario_bruto:.2f}', f'{num_faltas}'])
     print(tabela)
-    return 
+    return #Return com NONE
 
 def det_salario_liquido(salario_bruto, num_faltas, valor_vendas):
 
