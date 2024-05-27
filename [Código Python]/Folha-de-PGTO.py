@@ -150,7 +150,7 @@ def maior_salario():
     print("="*35, "MAIOR SALÁRIO", "="*35)
     construtorTabelas(maior_sal_matricula)
         
-def maior_faltas():d# Esboço !
+def maior_faltas():
     maior_faltas = 0
     matricula_maior_faltas = None
 
@@ -201,9 +201,9 @@ def consultar():
             print('Funcionário não existe!')
         else:
             matriculas_para_busca.append(funcionario_buscado)
-            construtorTabelas(matriculas_para_busca)
+            construtorTabelas(matriculas_para_busca, True, True, True)
     elif busca == 2:
-        construtorTabelas(funcionarios.keys())
+        construtorTabelas(funcionarios.keys(), False, False, False)
     elif busca == 3:
         maior_salario()
         
@@ -214,9 +214,9 @@ def consultar():
     else:
         return
 
-def construtorTabelas(matriculas_para_busca):
+def construtorTabelas(matriculas_para_busca, mostrar_num_faltas, mostrar_desconto, mostrar_percentual):
 
-    tabela = PrettyTable(["Matricula","Nome", "Função","Vendas Mensal","Salário Líquido", "Salário Bruto", "Num. faltas"])
+    tabela = PrettyTable(["Matricula","Nome", "Função","Vendas Mensal","Salário Líquido", "Salário Bruto"])
     tabela.align = 'l'
 
     for matricula in matriculas_para_busca:
@@ -231,10 +231,16 @@ def construtorTabelas(matriculas_para_busca):
         else:
             valor_vendas = 0
         
-        #duvida nessa função
         salario_liquido, percentual = det_salario_liquido(salario_bruto, num_faltas, valor_vendas)
+        tabela.add_row([matricula, nome, funcao, f'R$ {valor_vendas:.2f}', f'R$ {salario_liquido:.2f}', f'R$ {salario_bruto:.2f}'])
         
-        tabela.add_row([matricula, nome, funcao, f'R$ {valor_vendas:.2f}', f'R$ {salario_liquido:.2f}', f'R$ {salario_bruto:.2f}', f'{num_faltas}'])
+        if mostrar_desconto:
+            tabela.add_column('Desconto das Faltas', [desconto_falta])
+        if mostrar_num_faltas:
+            tabela.add_column('Número de Faltas', [num_faltas])
+        if mostrar_percentual:
+            tabela.add_column('Percentual de Imposto', [percentual])
+            
     print(tabela)
     return #Return com NONE
 
