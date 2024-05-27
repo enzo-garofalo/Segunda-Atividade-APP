@@ -147,7 +147,8 @@ def maior_salario():
             matricula_maior = matricula
     maior_sal_matricula.append(matricula_maior)
     
-    print(construtorTabelas(maior_sal_matricula))
+    print("="*35, "MAIOR SALÁRIO", "="*35)
+    construtorTabelas(maior_sal_matricula)
         
 def maior_faltas(): # Esboço !
     maior_faltas = 0
@@ -183,8 +184,6 @@ def consultar():
     elif busca == 2:
         construtorTabelas(funcionarios.keys())
     elif busca == 3:
-        
-        print("="*10, "MAIOR SALÁRIO", "="*10)
         maior_salario()
         
     print('='*82)
