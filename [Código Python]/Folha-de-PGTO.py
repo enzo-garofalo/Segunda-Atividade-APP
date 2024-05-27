@@ -150,7 +150,7 @@ def maior_salario():
     print("="*35, "MAIOR SALÁRIO", "="*35)
     construtorTabelas(maior_sal_matricula)
         
-def maior_faltas(): # Esboço !
+def maior_faltas():d# Esboço !
     maior_faltas = 0
     matricula_maior_faltas = None
 
@@ -160,10 +160,31 @@ def maior_faltas(): # Esboço !
             matricula_maior_faltas = matricula 
     if matricula_maior_faltas is not None:
         print #printar as informações do funcionário com maior salario construtorTabelas 
-        
-        #calculos desconto 
     else:
         print("Nenhum funcionário encontrado")
+            
+    desconto_falta = (salario_bruto/30)*num_faltas
+
+    salario_bruto_tratado  = salario_bruto - (salario_bruto / 30 * num_faltas) + (valor_vendas * 0.09)
+
+    if salario_bruto_tratado  <= 2259.20:
+        percentual_imposto = 0 
+    
+    elif salario_bruto_tratado  <= 2828.65:
+        percentual_imposto = 7.5
+    
+    elif salario_bruto_tratado  <= 3751.05:
+        percentual_imposto = 15
+
+    elif salario_bruto_tratado  <= 4664.68:
+        percentual_imposto = 22.5
+    
+    else:
+        percentual_imposto = 27.5
+
+    desconto_imposto = (salario_bruto_tratado * percentual_imposto/100)
+
+    print(f"desconto por falta = {desconto_falta}R$ imposto descontado = {percentual_imposto}% = {desconto_imposto}") #EXEMPLO
         
 def consultar():
     os.system('cls')
