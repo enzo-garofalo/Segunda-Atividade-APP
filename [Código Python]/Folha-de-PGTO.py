@@ -148,7 +148,28 @@ def maior_salario():
     maior_sal_matricula.append(matricula_maior)
     
     print(construtorTabelas(maior_sal_matricula))
+        
+def maior_faltas(): # Esboço !
+        maior_faltas = 0
+        matricula_maior_faltas = none
 
+for matricula in funcionarios:
+    
+    if funcionarios[matricula][3] > maior_faltas:
+     maior_faltas = funcionarios[matricula][3]
+     matricula_maior_faltas = matricula 
+        
+        
+if matricula_maior_faltas is not None:
+        print #printar as informações do funcionário com maior salario construtorTabelas 
+        
+        #calculos desconto 
+
+else:
+        print("Nenhum funcionário encontrado")
+        
+    
+        
 def consultar():
     os.system('cls')
     busca = escolha_consultar()
