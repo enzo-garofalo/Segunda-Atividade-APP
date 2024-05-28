@@ -1,1 +1,1 @@
-print(len(' Funcionário Rogério removido! '))
+print(len(' Maior Salário '))
