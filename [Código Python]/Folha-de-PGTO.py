@@ -14,7 +14,7 @@
 import os
 from prettytable import PrettyTable
 
-funcionarios = {1: ['Enzo', 101, 1500.0, 4, 20000.0], 2: ['Rogério', 102, 6000.0, 0, 0],  3: ['Bruno', 102, 6950.0, 0, 0] }
+funcionarios = {1: ['Enzo', 101, 1500.0, 4, 20000.0], 2: ['Rogério', 102, 6000.0, 4, 0],  3: ['Bruno', 102, 6950.0, 0, 0] }
     
 def cadastrar():
     os.system('cls')
@@ -57,13 +57,17 @@ def cadastrar():
                 continue
             else:
                 break
-
-    num_faltas = int(input(f"Digite o numero de faltas do funcionário {Nome}: "))
+    
+    while True:
+        num_faltas = int(input(f"Digite o numero de faltas do funcionário {Nome}: "))
+        if num_faltas > 31:
+            print("\n"+"="*13,"Digite um valor válido","="*13)
+            continue
+        else:
+            break
 
     print('='*50)
     funcionarios[Matricula] = [Nome, Funcao, salario_bruto, num_faltas, valor_vendas]
-    
-    construtorTabelas(funcionarios.keys())
     
     n_cadastro = int(input("\nDeseja cadastrar outro funcionário?\n[1-Sim | 2-Não]: "))
     if n_cadastro == 1:
@@ -79,7 +83,7 @@ def remover():
     
     if opcao == 1:
         print('='*82)
-        construtorTabelas(funcionarios.keys())
+        construtorTabelas(funcionarios.keys(), False, False, False)
         print('='*82)
 
     while True:
@@ -106,12 +110,12 @@ def remover():
 
 def escolha_consultar():
     while True:
-        print('='*14,'Consultar Relatórios','='*14)
-        print('-'*13,'| 1- Por Funcionário |','-'*13)
-        print('-'*13,'| 2- Exibir Todos    |','-'*13)
-        print('-'*13,'| 3- Maior Salário   |','-'*13)
-        print('-'*13,'| 4- Maior Faltas    |','-'*13)
-        print('='*50)
+        print('='*45,'Consultar Relatórios','='*45)
+        print('-'*43,'| 1- Por Funcionário |','-'*45)
+        print('-'*43,'| 2- Exibir Todos    |','-'*45)
+        print('-'*43,'| 3- Maior Salário   |','-'*45)
+        print('-'*43,'| 4- Maior Faltas    |','-'*45)
+        print('='*112)
         busca = int(input("O que deseja fazer? "))
         if busca not in [1,2,3,4]:
             os.system('cls')
@@ -127,102 +131,98 @@ def maior_salario():
     maior_sal_matricula = []
 
     for matricula in funcionarios:
-        funcao = funcionarios[matricula][1]
-        salario_bruto =funcionarios[matricula][2]
-        num_faltas = funcionarios[matricula][3]
         
-        if funcao == 101:
-            valor_vendas = funcionarios[matricula][4]
-        else:
-            valor_vendas = 0
-
+        nome, funcao, salario_bruto, num_faltas, valor_vendas, desconto  = dados(matricula)
         auxiliar = det_salario_liquido(salario_bruto,num_faltas,valor_vendas)
 
         if auxiliar[0] > maior_sal_liquido:
             maior_sal_liquido = auxiliar[0]
-            matricula_maior = matricula
-
-    maior_sal_matricula.append(matricula_maior)
+            maior_sal_matricula.clear()
+            maior_sal_matricula.append(matricula)
+        
+        elif auxiliar[0] == maior_sal_liquido:
+            maior_sal_matricula.append(matricula)
+    
     return maior_sal_matricula
         
 def maior_faltas():
     maior_faltas = 0
-    matricula_maior_faltas = 0
-    matricula_busca = []
+    matriculas_maior_faltas = []
 
     for matricula in funcionarios:
         if funcionarios[matricula][3] > maior_faltas:
             maior_faltas = funcionarios[matricula][3]
-            matricula_maior_faltas = matricula 
-
-    matricula_busca.append(matricula_maior_faltas)
-    return matricula_busca
+            matriculas_maior_faltas.clear()
+            matriculas_maior_faltas.append(matricula)
+        elif funcionarios[matricula][3] == maior_faltas:
+            matriculas_maior_faltas.append(matricula)
+           
+    return matriculas_maior_faltas
             
 def consultar():
     os.system('cls')
     busca = escolha_consultar()
     matriculas_para_busca = []
-    mostrar_num_faltas = mostrar_desconto = mostrar_percentual = False
 
     if busca == 1:
+        print('-'*112)
         funcionario_buscado = int(input('Digite a Matrícula do funcionário: '))
         matriculas_para_busca.append(funcionario_buscado)
-        mostrar_num_faltas = mostrar_percentual = True
     
     elif busca == 2:
         matriculas_para_busca = funcionarios.copy()
     
     elif busca == 3:
-        mostrar_percentual = True
         print('='*37,'Maior Salário','='*38)
         matriculas_para_busca = maior_salario()
     
     elif busca == 4:
-        mostrar_num_faltas = True
-        mostrar_desconto = True
         matriculas_para_busca = maior_faltas()
     
-    construtorTabelas(matriculas_para_busca, mostrar_num_faltas, mostrar_desconto, mostrar_percentual)
-    escolha = int(input("\nDeseja fazer outra busca?\n[1-Sim | 2-Não]: "))
+    print('\n'+'='*46,'Resultado Da Busca', '='*46)
+    construtorTabelas(matriculas_para_busca, busca)
+    print('='*112)
+
+    escolha = int(input("Deseja fazer outra busca?\n[1-Sim | 2-Não]: "))
     if escolha == 1:
         consultar()
     else:
         return
 
-def construtorTabelas(matriculas_para_busca, mostrar_num_faltas, mostrar_desconto, mostrar_percentual):
-
-    tabela = PrettyTable(["Matricula","Nome", "Função",  "Salário Líquido", "Salário Bruto"])
-    tabela.align = 'c'
-
+def construtorTabelas(matriculas_para_busca, busca):
     for matricula in matriculas_para_busca:
-        if matricula not in funcionarios.keys():
+
+        if matricula not in  funcionarios.keys():
             print('='*90)
             print('-'*32,"Matrícula Não encontrada", '-'*32)
             print('='*90)
             return
         
-        nome = funcionarios[matricula][0]
-        funcao = funcionarios[matricula][1]
-        salario_bruto = funcionarios[matricula][2]
-        num_faltas = funcionarios[matricula][3]
-        desconto_falta = (salario_bruto/30)*num_faltas
-
-        if funcao == 101:
-            valor_vendas = funcionarios[matricula][4]
-        else:
-            valor_vendas = 0
-        
+        nome, funcao, salario_bruto, num_faltas, valor_vendas, desconto  = dados(matricula)
         salario_liquido, percentual = det_salario_liquido(salario_bruto, num_faltas, valor_vendas)
-        tabela.add_row([matricula, nome, funcao, f'R$ {salario_liquido:.2f}', f'R$ {salario_bruto:.2f}'])
-        
-        if mostrar_num_faltas:
-            tabela.add_column('Número de Faltas', [num_faltas])
-        if mostrar_desconto:
-            tabela.add_column('Desconto das Faltas', [f'R$ {desconto_falta}'])
-        if mostrar_percentual:
-            tabela.add_column('Percentual de Imposto', [percentual])
 
-    print(tabela)
+        if busca == 1:
+            tabela = PrettyTable(["Matricula","Nome", "Função","Vendas Mensal","Salário Líquido", "Salário Bruto", "Num. faltas", "Desconto Faltas"])
+            tabela.align = 'c'
+            tabela.add_row([matricula, nome, funcao, f'R$ {salario_bruto:.2f}', f'R$ {salario_liquido:.2f}', f'R$ {salario_bruto:.2f}', f'{num_faltas}',f'{desconto:.2f}'])
+        
+        elif busca == 2:
+            tabela = PrettyTable(["Matricula","Nome", "Função","Salário Bruto","Salário Líquido"])
+            tabela.align = 'c'
+            tabela.add_row([matricula, nome, funcao, f'R$ {salario_bruto:.2f}', f'R$ {salario_liquido:.2f}'])
+        
+        elif busca == 3:
+            tabela = PrettyTable(["Matricula","Nome", "Função","Salário bruto","Porcentagem imposto", "Salário Líquido"])
+            tabela.align = 'c'
+            tabela.add_row([matricula, nome, funcao, f'R$ {salario_bruto:.2f}',f'{percentual}%', f'R$ {salario_liquido:.2f}'])
+        
+        elif busca == 4:
+            tabela = PrettyTable(["Matricula","Nome", "Função", "Num. faltas", "Desconto Faltas"])
+            tabela.align = 'c'
+            # desconto do salário, é o desconto das faltas ou o total (desconto do imposto)?
+            tabela.add_row([matricula, nome, funcao, f'{num_faltas}', f'R$ {desconto:.2f}'])
+        
+        print(tabela)
     return
 
 def det_salario_liquido(salario_bruto, num_faltas, valor_vendas):
@@ -246,6 +246,18 @@ def det_salario_liquido(salario_bruto, num_faltas, valor_vendas):
 
     salario_liquido = salario_bruto_tratado - (salario_bruto_tratado * percentual_imposto/100) 
     return salario_liquido, percentual_imposto
+
+def dados(matricula):
+
+    nome = funcionarios[matricula][0]
+    funcao = funcionarios[matricula][1]
+    salario_bruto = funcionarios[matricula][2]
+    num_faltas = funcionarios[matricula][3]
+    valor_vendas = funcionarios[matricula][4]
+    desconto = salario_bruto/30*num_faltas
+
+    return nome, funcao, salario_bruto, num_faltas, valor_vendas, desconto
+        
 
 def menu():
     while True:
