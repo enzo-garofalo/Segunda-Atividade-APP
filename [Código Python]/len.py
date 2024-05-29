@@ -1,1 +1,1 @@
-print(len(' Consultar Relatórios '))
+print(len(' Remover Funcionário '))
