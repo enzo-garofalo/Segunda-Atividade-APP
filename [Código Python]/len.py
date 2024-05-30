@@ -1,1 +1,1 @@
-print(len(' Remover Funcionário '))
+print(len(' Não Há Funcionário Cadastrados '))
