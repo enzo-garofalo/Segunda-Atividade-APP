@@ -19,9 +19,9 @@ def cadastrar():
     Nome = input("Digite o nome: ").title()
 
 
-    print('\n'+'-'*20,'Funções','-'*21)
-    print("    101 - Vendedor | 102 - Administrativo ")
-    print('-'*50)
+    print('\n'+'='*20,'Funções','='*21)
+    print("         101 - Vendedor | 102 - Administrativo ")
+    print('='*50)
 
     while True:
         Funcao = int(input('Digite a função: '))
@@ -39,16 +39,16 @@ def cadastrar():
 
     elif Funcao == 102:
         valor_vendas = 0
-        print('\n'+'-'*20,'Limites','-'*21)
-        print('----- Inferior: 2150.00 | Superior: 6950.00 ------')
-        print('-'*50)
+        print('\n'+'='*20,'Limites','='*21)
+        print('      Inferior: 2150.00 | Superior: 6950.00')
+        print('='*50)
         while True:
             salario_bruto = float(input("Digite o salário bruto: "))
             if salario_bruto < 2150 or salario_bruto > 6950:
                 print("\n"+"="*12,"Digite uma opção válida","="*13)
                 continue
             else:
-                print('\n'+'-'*50)
+                print('-'*50)
                 break
     
     while True:
@@ -62,7 +62,7 @@ def cadastrar():
     print('='*50)
     funcionarios[Matricula] = [Nome, Funcao, salario_bruto, num_faltas, valor_vendas]
     
-    n_cadastro = int(input("\nDeseja cadastrar outro funcionário?\n[1-Sim | 2-Não]: "))
+    n_cadastro = int(input("Deseja cadastrar outro funcionário?\n[1-Sim | 2-Não]: "))
     if n_cadastro == 1:
         cadastrar()
     else:
@@ -108,11 +108,9 @@ def consultar():
         tabela = PrettyTable(["Matricula","Nome", "Função", "Num. faltas", "Desconto Faltas"])
         matriculas_para_busca = maior_faltas()
     
-    print('\n'+'='*46,'Resultado Da Busca', '='*46)
     construtorTabelas(matriculas_para_busca, tabela, busca)
-    print('='*112)
 
-    escolha = int(input("Deseja fazer outra busca?\n[1-Sim | 2-Não]: "))
+    escolha = int(input("\nDeseja fazer outra busca?\n[1-Sim | 2-Não]: "))
     if escolha == 1:
         consultar()
     else:
@@ -126,7 +124,7 @@ def construtorTabelas(matriculas_para_busca, tabela, busca):
             print(' '*43,"Matrícula Não encontrada")
             return
         
-        nome, funcao, salario_bruto, num_faltas, valor_vendas, desconto  = dados(matricula)
+        nome, funcao, salario_bruto, num_faltas, valor_vendas, desconto  = ObterDados(matricula)
         salario_liquido, percentual = det_salario_liquido(salario_bruto, num_faltas, valor_vendas)
 
         if busca == 1:
@@ -143,6 +141,17 @@ def construtorTabelas(matriculas_para_busca, tabela, busca):
         
     print(tabela)
     return
+
+def ObterDados(matricula):
+
+    nome = funcionarios[matricula][0]
+    funcao = funcionarios[matricula][1]
+    salario_bruto = funcionarios[matricula][2]
+    num_faltas = funcionarios[matricula][3]
+    valor_vendas = funcionarios[matricula][4]
+    desconto = salario_bruto/30*num_faltas
+
+    return nome, funcao, salario_bruto, num_faltas, valor_vendas, desconto
 
 def maior_faltas():
     maior_faltas = 0
@@ -165,7 +174,7 @@ def maior_salario():
 
     for matricula in funcionarios:
         
-        nome, funcao, salario_bruto, num_faltas, valor_vendas, desconto  = dados(matricula)
+        nome, funcao, salario_bruto, num_faltas, valor_vendas, desconto  = ObterDados(matricula)
         auxiliar = det_salario_liquido(salario_bruto,num_faltas,valor_vendas)
 
         if auxiliar[0] > maior_sal_liquido:
@@ -237,17 +246,6 @@ def det_salario_liquido(salario_bruto, num_faltas, valor_vendas):
     salario_liquido = salario_bruto_tratado - (salario_bruto_tratado * percentual_imposto/100) 
     return salario_liquido, percentual_imposto
 
-def dados(matricula):
-
-    nome = funcionarios[matricula][0]
-    funcao = funcionarios[matricula][1]
-    salario_bruto = funcionarios[matricula][2]
-    num_faltas = funcionarios[matricula][3]
-    valor_vendas = funcionarios[matricula][4]
-    desconto = salario_bruto/30*num_faltas
-
-    return nome, funcao, salario_bruto, num_faltas, valor_vendas, desconto
-        
 def menu():
     while True:
         os.system('cls')
